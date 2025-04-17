@@ -83,31 +83,60 @@ The Recursive Fractal Mind represents a revolutionary AI framework designed to r
    ```bash
    npm install
    ```
-3. Create `.env.local` with the following variables:
+3. Set up environment variables using one of these methods:
+   
+   **Option A: System environment variables (recommended)**
+   
+   Set these in your shell, OS environment, or hosting platform:
+   ```bash
+   # Required
+   export OPENAI_API_KEY=sk-your-openai-key
+   export NEXTAUTH_SECRET=your-nextauth-secret
+   
+   # Optional for monetization
+   export STRIPE_SECRET_KEY=sk_your-stripe-key
+   export STRIPE_PUBLISHABLE_KEY=pk_your-stripe-key
+   export STRIPE_WEBHOOK_SECRET=whsec_your-webhook-secret
+   export REFLECT_SUBSCRIPTION_PRICE_ID=price_your-price-id
+   export JWT_SECRET=your-jwt-secret
+   ```
+   
+   **Option B: Local .env file**
+   
+   Create a `.env.local` file with:
    ```
    # OpenAI
-   OPENAI_API_KEY=your_openai_api_key_here
+   OPENAI_API_KEY=sk-your-openai-key
    
    # Next Auth
    NEXTAUTH_URL=http://localhost:3000
-   NEXTAUTH_SECRET=your_nextauth_secret_here
+   NEXTAUTH_SECRET=your-nextauth-secret
    
-   # Stripe
-   STRIPE_SECRET_KEY=your_stripe_secret_key_here
-   STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key_here
-   STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret_here
+   # Stripe (optional for monetization)
+   STRIPE_SECRET_KEY=sk_your-stripe-key
+   STRIPE_PUBLISHABLE_KEY=pk_your-stripe-key
+   STRIPE_WEBHOOK_SECRET=whsec_your-webhook-secret
    
    # Pricing
-   REFLECT_SUBSCRIPTION_PRICE_ID=your_stripe_price_id_here
+   REFLECT_SUBSCRIPTION_PRICE_ID=price_your-price-id
    
    # JWT
-   JWT_SECRET=your_jwt_secret_here
+   JWT_SECRET=your-jwt-secret
    ```
-4. Start the development server:
+
+4. Verify your environment is set up correctly:
+   ```bash
+   npm run check-env
+   ```
+
+5. Start the development server:
    ```bash
    npm run dev
    ```
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+6. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+> **Note:** If you don't provide a valid OpenAI API key, the RFM will use pre-defined fallback responses in development mode. This is useful for UI development but won't provide the full RFM experience.
 
 ## 📂 Project Structure
 

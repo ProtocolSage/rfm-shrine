@@ -4,10 +4,9 @@ import OpenAI from 'openai'
 import fs from 'fs'
 import path from 'path'
 
-// Create OpenAI client only if API key is available
-const openai = process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your_openai_api_key_here'
-  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  : null
+// Use system environment variable for API key
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || process.env.OPENAI_KEY || '';
+const openai = new OpenAI({ apiKey: OPENAI_API_KEY })
 
 // Define memory entry type
 type MemoryEntry = {
@@ -74,8 +73,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     let output = '';
     
-    // If OpenAI client is available, use it
-    if (openai) {
+    // Use OpenAI if we have a valid API key
+    if (OPENAI_API_KEY && OPENAI_API_KEY.startsWith('sk-')) {
       let messages = [
         {
           role: 'system',
@@ -102,7 +101,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       output = chat.choices[0].message.content;
     } else {
-      // Use fallback responses if no API key is available
+      // Log missing API key on server side
+      console.warn('WARNING: No valid OpenAI API key found in environment variables. Using fallback responses.');
+      
       // In development mode, we'll generate a pseudo-random but deterministic response
       // Use the prompt as a seed to always get the same response for the same prompt
       const seed = prompt.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
