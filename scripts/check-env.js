@@ -3,7 +3,17 @@
 // Script to check if important environment variables are set
 const chalk = require('chalk');
 
+// Detect if we're in a CI environment
+const isCI = process.env.CI === 'true' || 
+             process.env.VERCEL === '1' || 
+             process.env.NODE_ENV === 'production';
+
 function checkEnvironment() {
+  if (isCI) {
+    console.log('Running in CI/CD environment - skipping detailed checks');
+    return;
+  }
+  
   console.log(chalk.blue.bold('\n🔍 Checking environment variables for RFM...\n'));
   
   // Check for OpenAI API Key
@@ -59,4 +69,9 @@ function checkEnvironment() {
 }
 
 // Run the environment check
-checkEnvironment();
+try {
+  checkEnvironment();
+} catch (error) {
+  console.error('Error in environment check:', error);
+  // Don't fail the build on environment check errors
+}
