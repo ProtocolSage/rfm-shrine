@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 import MemoryReflection from '../components/MemoryReflection'
 
 // Define the memory entry type
@@ -26,6 +27,7 @@ function formatDate(dateString: string) {
 }
 
 export default function Memory() {
+  const { data: session } = useSession()
   const [memories, setMemories] = useState<MemoryEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
