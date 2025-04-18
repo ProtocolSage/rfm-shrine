@@ -3,9 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   // Configure MDX
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
-  speedInsights: {
-    enabled: true,
-  },
 };
 
 module.exports = nextConfig
