@@ -34,7 +34,13 @@ async function saveMemory(entry: MemoryEntry): Promise<void> {
 function extractTags(content: string): string[] {
   // Simple tag extraction - find words with # prefix or common themes
   const hashtagRegex = /#(\w+)/g
-  const hashtags = [...content.matchAll(hashtagRegex)].map(match => match[1])
+  
+  // Fix for RegExp.matchAll compatibility issue
+  const hashtags = []
+  let match
+  while ((match = hashtagRegex.exec(content)) !== null) {
+    hashtags.push(match[1])
+  }
   
   // Extract potential themes
   const themes = []
