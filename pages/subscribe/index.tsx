@@ -19,26 +19,14 @@ export default function Subscribe() {
     setError('');
 
     try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-
-      if (data.error) {
-        setError(data.error);
-        setIsLoading(false);
-        return;
-      }
-
-      // Redirect to Stripe Checkout
-      router.push(data.url);
+      // Simulate a delay for the demo
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Redirect to success page directly (Stripe integration removed)
+      router.push('/subscribe/success?demo=true');
     } catch (err) {
-      console.error('Subscription error:', err);
-      setError('Failed to initiate subscription process. Please try again.');
+      console.error('Subscription simulation error:', err);
+      setError('Subscription functionality is currently disabled in development mode.');
       setIsLoading(false);
     }
   };

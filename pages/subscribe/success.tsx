@@ -10,19 +10,18 @@ export default function SubscriptionSuccess() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!session_id) return;
-
-    // In a real implementation, you would verify the session here
-    // For now, we'll just simulate a delay and success
+    const { demo } = router.query;
+    
+    // Simulate a delay and then show success for demo mode
     const timer = setTimeout(() => {
       setIsLoading(false);
       
-      // In a production app, you would verify the session status
-      // and handle accordingly
+      // In a real implementation, this would verify the payment
+      // For now, we just show success in demo mode
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [session_id]);
+  }, [router.query]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
