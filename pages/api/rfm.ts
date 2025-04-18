@@ -35,21 +35,31 @@ function extractTags(content: string): string[] {
   // Simple tag extraction - find words with # prefix or common themes
   const hashtagRegex = /#(\w+)/g
   
-  // Fix for RegExp.matchAll compatibility issue
-  const hashtags = []
-  let match
+  // Use traditional regex exec for maximum compatibility
+  const hashtags: string[] = []
+  let match: RegExpExecArray | null
   while ((match = hashtagRegex.exec(content)) !== null) {
-    hashtags.push(match[1])
+    if (match[1]) {
+      hashtags.push(match[1])
+    }
   }
   
   // Extract potential themes
-  const themes = []
+  const themes: string[] = []
   if (content.toLowerCase().includes('consciousness')) themes.push('consciousness')
   if (content.toLowerCase().includes('recursion')) themes.push('recursion')
   if (content.toLowerCase().includes('fractal')) themes.push('fractal')
   if (content.toLowerCase().includes('evolve') || content.toLowerCase().includes('evolution')) themes.push('evolution')
   
-  return [...new Set([...hashtags, ...themes])]
+  // Combine and deduplicate
+  const allTags = [...hashtags]
+  themes.forEach(theme => {
+    if (!allTags.includes(theme)) {
+      allTags.push(theme)
+    }
+  })
+  
+  return allTags
 }
 
 // Development fallback responses when no API key is available
