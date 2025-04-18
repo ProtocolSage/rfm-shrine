@@ -1,25 +1,11 @@
 import Stripe from 'stripe';
 
-// Create Stripe instance if API key exists
-const getStripe = () => {
-  const stripeKey = process.env.STRIPE_SECRET_KEY;
-  if (!stripeKey) {
-    console.warn('No Stripe secret key found. Stripe functionality will be disabled.');
-    return null;
-  }
-  
-  return new Stripe(stripeKey, {
-    typescript: true,
-  });
-};
-
-export const stripe = getStripe();
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-03-31.basil', // Updated from '2023-10-16'
+  typescript: true,
+});
 
 export async function createCheckoutSession(userId: string, priceId: string) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
-  }
-  
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: 'subscription',
     payment_method_types: ['card'],
@@ -41,10 +27,6 @@ export async function createCheckoutSession(userId: string, priceId: string) {
 }
 
 export async function createPortalSession(customerId: string) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
-  }
-  
   const session = await stripe.billingPortal.sessions.create({
     customer: customerId,
     return_url: `${process.env.NEXTAUTH_URL}/profile`,
@@ -54,13 +36,6 @@ export async function createPortalSession(customerId: string) {
 }
 
 export async function getSubscriptionStatus(customerId: string) {
-  if (!stripe) {
-    return {
-      hasActiveSubscription: false,
-      subscriptions: [],
-    };
-  }
-  
   try {
     const subscriptions = await stripe.subscriptions.list({
       customer: customerId,
