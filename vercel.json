@@ -11,8 +11,5 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ],
-  "env": {
-    "OPENAI_KEY": "@openai-api-key"
-  }
+  ]
 }
