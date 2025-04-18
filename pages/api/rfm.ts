@@ -38,7 +38,14 @@ function extractTags(content: string): string[] {
   // Use traditional regex exec for maximum compatibility
   const hashtags: string[] = []
   let match: RegExpExecArray | null
-  while ((match = hashtagRegex.exec(content)) !== null) {
+  let loopCount = 0
+  const maxLoops = 100 // Prevent infinite loops
+  
+  // Reset regex state before use (important!)
+  hashtagRegex.lastIndex = 0
+  
+  while ((match = hashtagRegex.exec(content)) !== null && loopCount < maxLoops) {
+    loopCount++
     if (match[1]) {
       hashtags.push(match[1])
     }

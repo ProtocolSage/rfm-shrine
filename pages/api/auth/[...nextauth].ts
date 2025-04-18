@@ -78,8 +78,8 @@ export const authOptions: AuthOptions = {
           throw new Error("No user found with this email");
         }
 
-        // In production, you would use bcrypt.compare here
-        const isPasswordValid = credentials.password === user.hashedPassword; // This is just for demo
+        // Use bcrypt compare for secure password validation
+        const isPasswordValid = await compare(credentials.password, user.hashedPassword)
         
         if (!isPasswordValid) {
           throw new Error("Invalid password");

@@ -19,24 +19,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     // Check if directory exists
     if (!fs.existsSync(memoryDir)) {
+      // Create directory if it doesn't exist for robustness
+      try {
+        fs.mkdirSync(memoryDir, { recursive: true })
+      } catch (err) {
+        console.warn('Could not create memory directory:', err)
+      }
       return res.status(200).json({ memories: [] })
     }
     
     // Read all memory files
-    const files = await fs.promises.readdir(memoryDir)
+    let files: string[] = []
+    try {
+      files = await fs.promises.readdir(memoryDir)
+    } catch (err) {
+      console.error('Error reading memory directory:', err)
+      return res.status(200).json({ memories: [] })
+    }
+    
     const jsonFiles = files.filter(file => file.endsWith('.json'))
     
     const memories: MemoryEntry[] = []
     
     // Read and parse each file
     for (const file of jsonFiles) {
-      const filePath = path.join(memoryDir, file)
-      const data = await fs.promises.readFile(filePath, 'utf8')
       try {
+        const filePath = path.join(memoryDir, file)
+        const data = await fs.promises.readFile(filePath, 'utf8')
         const memory = JSON.parse(data) as MemoryEntry
         memories.push(memory)
       } catch (e) {
-        console.error(`Error parsing memory file ${file}:`, e)
+        console.error(`Error reading or parsing memory file ${file}:`, e)
       }
     }
     
